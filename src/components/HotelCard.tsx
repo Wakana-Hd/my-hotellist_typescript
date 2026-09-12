@@ -1,4 +1,21 @@
-function HotelCard(props) {
+type Hotel = {
+  id: number;
+  name: string;
+  city: string;
+  rating: string;
+  images: string[];
+  image?: string;
+  date: string;
+  type: string;
+  memo: string;
+};
+
+type HotelCardProps = {
+  hotel: Hotel;
+  onSelect: (id: number) => void;
+};
+
+function HotelCard(props: HotelCardProps) {
     return (
         <article className="hotel-card">
             <button

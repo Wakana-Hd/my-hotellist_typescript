@@ -1,4 +1,9 @@
-  function Header(props) {
+  type HeaderProps = {
+  onHome: () => void;
+  onAdd: () => void;
+};
+  
+  function Header(props: HeaderProps) {
   return (
     <header className="site-header">
       <div className="header-inner">

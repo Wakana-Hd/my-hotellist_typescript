@@ -3,30 +3,45 @@ import HotelCard from "./components/HotelCard";
 import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 
+type Hotel = {
+  id: number;
+  name: string;
+  city: string;
+  rating: string;
+  images: string[];
+  image?: string;
+  date: string;
+  type: string;
+  memo: string;
+};
 
 function App() {
   //開いたとき、localStorageに保存済みホテルがあれば配列に戻してhotelListの初期値にする。
   //何も保存されていなければ空配列 [] から始める。
-  const [hotelList, setHotelList] = useState(() => {
+  const [hotelList, setHotelList] = useState<Hotel[]>(() => {
     const savedHotels = localStorage.getItem("hotelList");
 
-    if (savedHotels) { return JSON.parse(savedHotels); }
+    if (savedHotels) {
+      return JSON.parse(savedHotels);
+    }
+
     return [];
   });
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [rating, setRating] = useState("");
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<string[]>([]);
   const [date, setDate] = useState("");
   const [type, setType] = useState("");
   const [memo, setMemo] = useState("");
+
   //今編集しているホテルのidを保存する
-  const [editingHotelId, setEditingHotelId] = useState(null);
+  const [editingHotelId, setEditingHotelId] = useState<number | null>(null);
   //今詳細画面で表示しているホテルのidを保存する
-  const [selectedHotelId, setSelectedHotelId] = useState(null);
+  const [selectedHotelId, setSelectedHotelId] = useState<number | null>(null);
   const [screen, setScreen] = useState("list");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const imageContainerRef = useRef(null);
+  const imageContainerRef = useRef<HTMLDivElement | null>(null);
 
   //登録ボタンを押した時
   const handleAddHotel = () => {
@@ -93,7 +108,7 @@ function App() {
   };
 
   //削除する時
-  const handleDeleteHotel = (id) => {
+  const handleDeleteHotel = (id: number) => {
     setHotelList(
       hotelList.filter((hotel) => hotel.id !== id)
     );
@@ -103,7 +118,7 @@ function App() {
   };
 
   //編集する時
-  const handleEditHotel = (hotel) => {
+  const handleEditHotel = (hotel: Hotel) => {
     setName(hotel.name);
     setCity(hotel.city);
     setRating(hotel.rating);
@@ -131,13 +146,17 @@ function App() {
   }
 
   //画像圧縮
-  const resizeImage = (imageData) => {
+  const resizeImage = (imageData: string): Promise<string> => {
     return new Promise((resolve) => {
       const img = new Image();
 
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+          return;
+        }
 
         let width = img.width;
         let height = img.height;
@@ -158,12 +177,15 @@ function App() {
     });
   };
 
-  const readAndResizeImage = (file) => {
-    return new Promise((resolve) => {
+  const readAndResizeImage = (file: File): Promise<string> => {
+    return new Promise<string>((resolve) => {
 
       const reader = new FileReader();
 
       reader.addEventListener("load", async () => {
+        if (typeof reader.result !== "string") {
+          return;
+        }
         const resizedImage = await resizeImage(reader.result);
         resolve(resizedImage);
       });
@@ -211,7 +233,7 @@ function App() {
     };
   }, [selectedHotel]);
 
-  const handleSelectHotel = (id) => {
+  const handleSelectHotel = (id: number) => {
     setSelectedHotelId(id);
     setCurrentImageIndex(0);
     setScreen("detail");
@@ -415,7 +437,7 @@ function App() {
               <span>メモ</span>
 
               <textarea
-                rows="6"
+                rows={6}
                 placeholder="空間、朝食、接客、また泊まりたい理由など"
                 value={memo}
                 onChange={(e) => setMemo(e.target.value)}
@@ -432,6 +454,8 @@ function App() {
                 multiple
 
                 onChange={async (e) => {
+                  if (!e.target.files) return;
+
                   const selectedFiles = Array.from(e.target.files);
                   if (selectedFiles.length === 0) {
                     return;
