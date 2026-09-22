@@ -1,7 +1,11 @@
 import "./App.css";
 import HotelCard from "./components/HotelCard";
-import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
+import Login from "./components/Login";
+import { useState, useEffect, useRef } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { supabase } from "./lib/supabase";
+
 
 type Hotel = {
   id: number;
@@ -35,13 +39,13 @@ function App() {
   const [type, setType] = useState("");
   const [memo, setMemo] = useState("");
 
-  //今編集しているホテルのidを保存する
   const [editingHotelId, setEditingHotelId] = useState<number | null>(null);
-  //今詳細画面で表示しているホテルのidを保存する
   const [selectedHotelId, setSelectedHotelId] = useState<number | null>(null);
   const [screen, setScreen] = useState("list");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imageContainerRef = useRef<HTMLDivElement | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+
 
   //登録ボタンを押した時
   const handleAddHotel = () => {
@@ -199,9 +203,26 @@ function App() {
   useEffect(() => {
     localStorage.setItem(
       "hotelList",
-      JSON.stringify(hotelList) /*配列やオブジェクトを文字列に変換する*/
+      JSON.stringify(hotelList)
     );
   }, [hotelList]);
+
+  //ログイン状態を確認
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const selectedHotel = hotelList.find(
     (hotel) => hotel.id === selectedHotelId
@@ -233,13 +254,24 @@ function App() {
     };
   }, [selectedHotel]);
 
+
   const handleSelectHotel = (id: number) => {
     setSelectedHotelId(id);
     setCurrentImageIndex(0);
     setScreen("detail");
   }
 
+
+  const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.log("ログアウトエラー:", error);
+  }
+};
+
   let content;
+
 
   //詳細画面
   if (screen === "detail" && selectedHotel) {
@@ -566,22 +598,28 @@ function App() {
 
   return (
     <>
-      <Header
-        onHome={() => setScreen("list")}
-        onAdd={() => {
-          setName("");
-          setCity("");
-          setRating("");
-          setImages([]);
-          setEditingHotelId(null);
-          setScreen("form");
-        }}
-      />
+      {!session ? (
+        <Login />
+      ) : (
+        <>
+        <button onClick={handleLogout}>ログアウト</button>
+          <Header
+            onHome={() => setScreen("list")}
+            onAdd={() => {
+              setName("");
+              setCity("");
+              setRating("");
+              setImages([]);
+              setEditingHotelId(null);
+              setScreen("form");
+            }}
+          />
 
-      {content}
+          {content}
+        </>
+      )}
     </>
-  )
-
+  );
 }
 
 export default App;
