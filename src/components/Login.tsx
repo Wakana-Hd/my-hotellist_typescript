@@ -4,16 +4,17 @@ import { supabase } from "../lib/supabase";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
 
     //ログイン
     const handleLogin = async () => {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
         });
-
-        console.log("data:", data);
-        console.log("error:", error);
+        if (error) {
+            setMessage("メールアドレスまたはパスワードが違います");
+        }
     };
 
     //新規登録
@@ -30,6 +31,8 @@ function Login() {
     return (
         <div>
             <h2>ログイン</h2>
+
+            {message && <p>{message}</p>}
 
             <input
                 type="email"
