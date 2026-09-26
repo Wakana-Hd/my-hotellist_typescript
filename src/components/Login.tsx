@@ -1,3 +1,4 @@
+import "./Login.css";
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -29,27 +30,51 @@ function Login() {
     };
 
     return (
-        <div>
-            <h2>ログイン</h2>
+        <div className="login-page">
+            <div className="login-card">
 
-            {message && <p>{message}</p>}
+                <div className="login-header">
+                    <h1>MY HOTEL LOG</h1>
+                    <p>泊まったホテルを記録して、<br />
+                        あなただけの旅の思い出を作ろう
+                    </p>
+                </div>
 
-            <input
-                type="email"
-                placeholder="メールアドレス"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
+                <h2>ログイン</h2>
 
-            <input
-                type="password"
-                placeholder="パスワード"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
+                {message && <p className="login-error">{message}</p>}
 
-            <button onClick={handleLogin}>ログイン</button>
-            <button onClick={handleSignUp}>新規登録</button>
+                <label>メールアドレス</label>
+                <input
+                    type="email"
+                    placeholder="example@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <label>パスワード</label>
+                <input
+                    type="password"
+                    placeholder="パスワードを入力"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <button
+                className="login-button"
+                onClick={handleLogin}
+                >
+                    ログイン
+                </button>
+
+                <p className="siginup-text">または</p>
+                <button
+                className="signup-button"
+                onClick={handleSignUp}
+                >
+                    新規登録
+                </button>
+            </div>
         </div>
     );
 }
