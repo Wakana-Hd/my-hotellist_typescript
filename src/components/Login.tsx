@@ -1,82 +1,99 @@
 import "./Login.css";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { supabase } from "../lib/supabase";
 
+type LoginFormData = {
+	email: string;
+	password: string;
+};
+
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+	const {
+		register,
+		handleSubmit,
+		formState: { isSubmitting },
+	} = useForm<LoginFormData>();
+	const [message, setMessage] = useState("");
 
-    //ログイン
-    const handleLogin = async () => {
-        const { error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-        if (error) {
-            setMessage("メールアドレスまたはパスワードが違います");
-        }
-    };
+	//ログイン
+	const handleLogin = async (data: LoginFormData) => {
+		const { error } = await supabase.auth.signInWithPassword({
+			email: data.email,
+			password: data.password,
+		});
+		if (error) {
+			setMessage("メールアドレスまたはパスワードが違います");
+		}
+	};
 
-    //新規登録
-    const handleSignUp = async () => {
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        });
+	//新規登録
+	const handleSignUp = async (data: LoginFormData) => {
+		const { error } = await supabase.auth.signUp({
+			email: data.email,
+			password: data.password,
+		});
+		if (error) {
+			setMessage("新規登録に失敗しました");
+			return;
+		}
 
-        console.log("signup data:", data);
-        console.log("signup error:", error);
-    };
+		setMessage("確認メールを送りました");
+	};
 
-    return (
-        <div className="login-page">
-            <div className="login-card">
+	return (
+		<div className="login-page">
+			<div className="login-card">
+				<div className="login-header">
+					<h1>MY HOTEL LOG</h1>
+					<p>
+						泊まったホテルを記録して、
+						<br />
+						あなただけの旅の思い出を作ろう
+					</p>
+				</div>
 
-                <div className="login-header">
-                    <h1>MY HOTEL LOG</h1>
-                    <p>泊まったホテルを記録して、<br />
-                        あなただけの旅の思い出を作ろう
-                    </p>
-                </div>
+				<h2>ログイン</h2>
+				<form onSubmit={handleSubmit(handleLogin)}>
+					{message && <p className="login-error">{message}</p>}
 
-                <h2>ログイン</h2>
+					<label htmlFor="email">メールアドレス</label>
+					<input
+						id="email"
+						type="email"
+						placeholder="example@email.com"
+						{...register("email")}
+					/>
 
-                {message && <p className="login-error">{message}</p>}
+					<label htmlFor="password">パスワード</label>
+					<input
+						id="password"
+						type="password"
+						placeholder="パスワードを入力"
+						{...register("password")}
+					/>
 
-                <label>メールアドレス</label>
-                <input
-                    type="email"
-                    placeholder="example@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+					<button
+						type="submit"
+						className="login-button"
+						disabled={isSubmitting}
+					>
+						ログイン
+					</button>
 
-                <label>パスワード</label>
-                <input
-                    type="password"
-                    placeholder="パスワードを入力"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <button
-                className="login-button"
-                onClick={handleLogin}
-                >
-                    ログイン
-                </button>
-
-                <p className="siginup-text">または</p>
-                <button
-                className="signup-button"
-                onClick={handleSignUp}
-                >
-                    新規登録
-                </button>
-            </div>
-        </div>
-    );
+					<p className="signup-text">または</p>
+					<button
+						type="button"
+						className="signup-button"
+						onClick={handleSubmit(handleSignUp)}
+						disabled={isSubmitting}
+					>
+						新規登録
+					</button>
+				</form>
+			</div>
+		</div>
+	);
 }
 
 export default Login;

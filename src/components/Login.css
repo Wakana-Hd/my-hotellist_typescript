@@ -1,104 +1,104 @@
 .login-page {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #eef3ef;
-  padding: 24px;
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #eef3ef;
+	padding: 24px;
 }
 
 .login-card {
-  width: 100%;
-  max-width: 500px;
-  padding: 40px;
-  background-color: white;
-  border-radius: 12px;
+	width: 100%;
+	max-width: 500px;
+	padding: 40px;
+	background-color: white;
+	border-radius: 12px;
 }
 
 .login-card input {
-  width: 100%;
-  height: 48px;
-  padding: 0 14px;
-  margin-top: 8px;
-  margin-bottom: 20px;
+	width: 100%;
+	height: 48px;
+	padding: 0 14px;
+	margin-top: 8px;
+	margin-bottom: 20px;
 
-  border: 1px solid #cfd8d1;
-  border-radius: 6px;
-  background-color: #ffffff;
-  color: #1e2925;
+	border: 1px solid #cfd8d1;
+	border-radius: 6px;
+	background-color: #ffffff;
+	color: #1e2925;
 
-  outline: none;
+	outline: none;
 }
 
 .login-card input:focus {
-  border-color: #466252;
-  box-shadow: 0 0 0 3px rgb(70 98 82 / 12%);
+	border-color: #466252;
+	box-shadow: 0 0 0 3px rgb(70 98 82 / 12%);
 }
 
 .login-button,
 .signup-button {
-  width: 100%;
-  min-height: 48px;
-  font-weight: 700;
-  cursor: pointer;
+	width: 100%;
+	min-height: 48px;
+	font-weight: 700;
+	cursor: pointer;
 }
 
 .login-button {
-  border: 1px solid #466252;
-  background-color: #466252;
-  color: white;
+	border: 1px solid #466252;
+	background-color: #466252;
+	color: white;
 }
 
 .login-button:hover {
-  background-color: #2e4638;
+	background-color: #2e4638;
 }
 
 .signup-button {
-  border: 1px solid #466252;
-  background-color: white;
-  color: #466252;
+	border: 1px solid #466252;
+	background-color: white;
+	color: #466252;
 }
 
 .signup-button:hover {
-  background-color: #eef3ef;
+	background-color: #eef3ef;
 }
 
 .signup-text {
-  margin: 16px 0;
-  text-align: center;
-  color: #66736d;
-  font-size: 13px;
+	margin: 16px 0;
+	text-align: center;
+	color: #66736d;
+	font-size: 13px;
 }
 
 .login-header {
-  margin-bottom: 36px;
-  text-align: center;
+	margin-bottom: 36px;
+	text-align: center;
 }
 
 .login-header h1 {
-  margin-bottom: 12px;
-  color: #466252;
-  font-size: 36px;
-  letter-spacing: 0.05em;
+	margin-bottom: 12px;
+	color: #466252;
+	font-size: 36px;
+	letter-spacing: 0.05em;
 }
 
 .login-header p {
-  margin: 0;
-  color: #66736d;
-  font-size: 14px;
-  line-height: 1.8;
+	margin: 0;
+	color: #66736d;
+	font-size: 14px;
+	line-height: 1.8;
 }
 
 .login-card h2 {
-  margin-bottom: 24px;
-  font-size: 20px;
+	margin-bottom: 24px;
+	font-size: 20px;
 }
 
 .login-error {
-  margin-bottom: 20px;
-  padding: 12px 14px;
-  background-color: #fdf1f1;
-  color: #a33b3b;
-  font-size: 13px;
-  line-height: 1.5;
+	margin-bottom: 20px;
+	padding: 12px 14px;
+	background-color: #fdf1f1;
+	color: #a33b3b;
+	font-size: 13px;
+	line-height: 1.5;
 }

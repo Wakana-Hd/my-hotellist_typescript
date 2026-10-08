@@ -1,37 +1,37 @@
-  type HeaderProps = {
-  onHome: () => void;
-  onAdd: () => void;
+type HeaderProps = {
+	onHome: () => void;
+	onAdd: () => void;
+	onLogout: () => void;
 };
-  
-  function Header(props: HeaderProps) {
-  return (
-    <header className="site-header">
-      <div className="header-inner">
-        <button
-          className="brand"
-          onClick={props.onHome}
-          >
-          MY HOTEL LOG
-        </button>
 
-        <nav className="nav">
-          <button
-          className="nav-link"
-          onClick={props.onHome}
-          >
-            Home
-          </button>
+function Header(props: HeaderProps) {
+	return (
+		<header className="site-header">
+			<div className="header-inner">
+				<button type="button" className="brand" onClick={props.onHome}>
+					MY HOTEL LOG
+				</button>
 
-          <button
-          className="button button-small"
-          onClick={props.onAdd}
-          >
-            + Add hotel
-          </button>
-        </nav>
-      </div>
-    </header>
-);
+				<nav className="nav">
+					<button type="button" className="nav-link" onClick={props.onHome}>
+						Home
+					</button>
+
+					<button
+						type="button"
+						className="button button-small"
+						onClick={props.onAdd}
+					>
+						+ Add hotel
+					</button>
+
+					<button type="button" className="nav-link" onClick={props.onLogout}>
+						ログアウト
+					</button>
+				</nav>
+			</div>
+		</header>
+	);
 }
 
 export default Header;
