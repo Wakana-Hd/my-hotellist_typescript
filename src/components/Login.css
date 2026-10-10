@@ -102,3 +102,26 @@
 	font-size: 13px;
 	line-height: 1.5;
 }
+
+.forgot-password-button {
+	display: block;
+	margin: 8px auto 20px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #527a65;
+	font-size: 13px;
+	cursor: pointer;
+	transition: color 0.2s;
+}
+
+.forgot-password-button:hover {
+	color: #345a46;
+	text-decoration: underline;
+}
+
+.password-hint {
+	font-size: 13px;
+	color: #888;
+	margin-top: 4px;
+}

@@ -47,15 +47,35 @@ function App() {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const imageContainerRef = useRef<HTMLDivElement | null>(null);
 	const { session, loading } = useAuth();
+	const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
 
-	const saveHotels = (hotels: Hotel[]) => {
-		setHotelList(hotels);
-		localStorage.setItem("hotelList", JSON.stringify(hotels));
+	useEffect(() => {
+		const { data } = supabase.auth.onAuthStateChange((event) => {
+			if (event === "PASSWORD_RECOVERY") {
+				setIsPasswordRecovery(true);
+			}
+		});
+
+		return () => {
+			data.subscription.unsubscribe();
+		};
+	}, []);
+
+	const saveHotels = (hotels: Hotel[]): boolean => {
+		try {
+			localStorage.setItem("hotelList", JSON.stringify(hotels));
+			setHotelList(hotels);
+			return true;
+		} catch (error) {
+			alert("ホテルの保存に失敗しました");
+			console.error("保存エラー:", error);
+			return false;
+		}
 	};
 
 	//登録、編集
 	const handleAddHotel = (data: HotelFormData) => {
-		console.log("フォームのデータ:", data);
+		let success = false;
 
 		const newHotel = {
 			id: Date.now(),
@@ -67,6 +87,7 @@ function App() {
 			type: data.type,
 			memo: data.memo,
 		};
+
 		if (editingHotelId !== null) {
 			const updatedHotels = hotelList.map((hotel) => {
 				if (hotel.id === editingHotelId) {
@@ -84,21 +105,25 @@ function App() {
 				return hotel;
 			});
 
-			saveHotels(updatedHotels);
+			success = saveHotels(updatedHotels);
 		} else {
-			saveHotels([...hotelList, newHotel]);
+			success = saveHotels([...hotelList, newHotel]);
 		}
 
-		setEditingHotelId(null);
-		setScreen("list");
+		if (success) {
+			setEditingHotelId(null);
+			setScreen("list");
+		}
 	};
 
 	//削除する時
 	const handleDeleteHotel = (id: number) => {
-		saveHotels(hotelList.filter((hotel) => hotel.id !== id));
+		const success = saveHotels(hotelList.filter((hotel) => hotel.id !== id));
 
-		setSelectedHotelId(null);
-		setScreen("list");
+		if (success) {
+			setSelectedHotelId(null);
+			setScreen("list");
+		}
 	};
 
 	//編集する時
@@ -152,7 +177,8 @@ function App() {
 		const { error } = await supabase.auth.signOut();
 
 		if (error) {
-			console.log("ログアウトエラー:", error);
+			alert("ログアウトに失敗しました。もう一度お試しください。");
+			console.error("ログアウトエラー:", error);
 		}
 	};
 
@@ -291,6 +317,7 @@ function App() {
 					</div>
 
 					<HotelForm
+						key={editingHotelId ?? "new"}
 						onSubmit={handleAddHotel}
 						initialHotel={hotelList.find(
 							(hotel) => hotel.id === editingHotelId,
@@ -342,8 +369,11 @@ function App() {
 	}
 	return (
 		<>
-			{!session ? (
-				<Login />
+			{!session || isPasswordRecovery ? (
+				<Login
+					isPasswordRecovery={isPasswordRecovery}
+					onPasswordUpdated={() => setIsPasswordRecovery(false)}
+				/>
 			) : (
 				<>
 					<Header

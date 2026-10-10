@@ -39,7 +39,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 
 	//画像圧縮
 	const resizeImage = (imageData: string): Promise<string> => {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const img = new Image();
 
 			img.onload = () => {
@@ -47,6 +47,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 				const ctx = canvas.getContext("2d");
 
 				if (!ctx) {
+					reject(new Error("画像を処理できませんでした"));
 					return;
 				}
 
@@ -65,21 +66,34 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 				resolve(resizedImage);
 			};
 
+			img.onerror = () => {
+				reject(new Error("画像を読み込めませんでした"));
+			};
+
 			img.src = imageData;
 		});
 	};
 
 	const readAndResizeImage = (file: File): Promise<string> => {
-		return new Promise<string>((resolve) => {
+		return new Promise<string>((resolve, reject) => {
 			const reader = new FileReader();
 
 			reader.addEventListener("load", async () => {
 				if (typeof reader.result !== "string") {
+					reject(new Error("画像を読み込めませんでした"));
 					return;
 				}
-				const resizedImage = await resizeImage(reader.result);
-				resolve(resizedImage);
+				try {
+					const resizedImage = await resizeImage(reader.result);
+					resolve(resizedImage);
+				} catch (error) {
+					reject(error);
+				}
 			});
+
+			reader.onerror = () => {
+				reject(new Error("画像ファイルの読み込みに失敗しました"));
+			};
 
 			reader.readAsDataURL(file);
 		});
@@ -179,9 +193,13 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 							return readAndResizeImage(file);
 						});
 
-						const resizedImages = await Promise.all(imagePromises);
-
-						setValue("images", [...images, ...resizedImages]);
+						try {
+							const resizedImages = await Promise.all(imagePromises);
+							setValue("images", [...images, ...resizedImages]);
+						} catch (error) {
+							console.error("画像の読み込みエラー:", error);
+							alert("画像を読み込めませんでした。もう一度お試しください。");
+						}
 					}}
 				/>
 			</label>
