@@ -6,27 +6,7 @@ import HotelForm from "./components/HotelForm";
 import Login from "./components/Login";
 import { useAuth } from "./lib/auth";
 import { supabase } from "./lib/supabase";
-
-type Hotel = {
-	id: number;
-	name: string;
-	city: string;
-	rating: string;
-	images: string[];
-	image?: string;
-	date: string;
-	type: string;
-	memo: string;
-};
-type HotelFormData = {
-	name: string;
-	city: string;
-	rating: string;
-	date: string;
-	type: string;
-	memo: string;
-	images: string[];
-};
+import type { Hotel, HotelFormData } from "./types";
 
 function App() {
 	//開いたとき、localStorageに保存済みホテルがあれば配列に戻してhotelListの初期値にする。
@@ -78,28 +58,18 @@ function App() {
 		let success = false;
 
 		const newHotel = {
+			...data,
 			id: Date.now(),
-			name: data.name,
-			city: data.city,
-			rating: data.rating,
-			images: data.images,
-			date: data.date,
-			type: data.type,
-			memo: data.memo,
 		};
 
 		if (editingHotelId !== null) {
 			const updatedHotels = hotelList.map((hotel) => {
 				if (hotel.id === editingHotelId) {
 					return {
+						//編集前のホテル情報
 						...hotel,
-						name: data.name,
-						city: data.city,
-						rating: data.rating,
-						images: data.images,
-						date: data.date,
-						type: data.type,
-						memo: data.memo,
+						//新しい情報で上書き
+						...data,
 					};
 				}
 				return hotel;

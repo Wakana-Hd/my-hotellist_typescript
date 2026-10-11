@@ -1,14 +1,5 @@
 import { useForm } from "react-hook-form";
-
-type HotelFormData = {
-	name: string;
-	city: string;
-	rating: string;
-	date: string;
-	type: string;
-	memo: string;
-	images: string[];
-};
+import type { HotelFormData } from "../types";
 
 type HotelFormProps = {
 	onSubmit: (data: HotelFormData) => void;

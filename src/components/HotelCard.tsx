@@ -1,14 +1,4 @@
-type Hotel = {
-	id: number;
-	name: string;
-	city: string;
-	rating: string;
-	images: string[];
-	image?: string;
-	date: string;
-	type: string;
-	memo: string;
-};
+import type { Hotel } from "../types";
 
 type HotelCardProps = {
 	hotel: Hotel;
