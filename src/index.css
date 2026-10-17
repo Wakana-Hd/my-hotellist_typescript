@@ -1,25 +1,25 @@
 :root {
-  color-scheme: light;
+	color-scheme: light;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
+	margin: 0;
+	min-width: 320px;
 }
 
 button,
 input,
 textarea,
 select {
-  font: inherit;
+	font: inherit;
 }
