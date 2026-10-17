@@ -12,6 +12,8 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 		register,
 		handleSubmit,
 		setValue,
+		setError,
+		clearErrors,
 		watch,
 		formState: { errors },
 	} = useForm<HotelFormData>({
@@ -101,7 +103,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 						required: "ホテル名を入力してください",
 					})}
 				/>
-				{errors.name && <p>{errors.name.message}</p>}
+				{errors.name && <p className="form-error">{errors.name.message}</p>}
 			</label>
 
 			<label className="field">
@@ -113,7 +115,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 						required: "地域を入力してください",
 					})}
 				/>
-				{errors.city && <p>{errors.city.message}</p>}
+				{errors.city && <p className="form-error">{errors.city.message}</p>}
 			</label>
 
 			<label className="field">
@@ -130,7 +132,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 					<option value="★★☆☆☆">★★☆☆☆</option>
 					<option value="★☆☆☆☆">★☆☆☆☆</option>
 				</select>
-				{errors.rating && <p>{errors.rating.message}</p>}
+				{errors.rating && <p className="form-error">{errors.rating.message}</p>}
 			</label>
 
 			<label className="field">
@@ -177,9 +179,17 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 						}
 
 						if (images.length + selectedFiles.length > 3) {
-							alert("選択できる写真は3枚までです");
+							setError("images", {
+								type: "manual",
+								message:
+									"選択できる写真は3枚までです。\n追加する場合は、登録済みの画像を削除してから選択してください。",
+							});
+
+							e.target.value = "";
+
 							return;
 						}
+
 						const imagePromises = selectedFiles.map((file) => {
 							return readAndResizeImage(file);
 						});
@@ -187,12 +197,16 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 						try {
 							const resizedImages = await Promise.all(imagePromises);
 							setValue("images", [...images, ...resizedImages]);
+							clearErrors("images");
+							e.target.value = "";
 						} catch (error) {
 							console.error("画像の読み込みエラー:", error);
 							alert("画像を読み込めませんでした。もう一度お試しください。");
+							e.target.value = "";
 						}
 					}}
 				/>
+				{errors.images && <p className="form-error">{errors.images.message}</p>}
 			</label>
 
 			{images.length > 0 && (
@@ -214,6 +228,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 									);
 
 									setValue("images", updatedImages);
+									clearErrors("images");
 								}}
 							>
 								削除

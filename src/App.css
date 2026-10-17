@@ -426,8 +426,8 @@ h1 {
 }
 
 .file-input {
-	padding: 9px !important;
-	background: var(--paper) !important;
+	padding: 9px;
+	background: var(--paper);
 }
 
 .file-input::file-selector-button {
@@ -443,6 +443,11 @@ h1 {
 	display: flex;
 	justify-content: flex-end;
 	gap: 14px;
+}
+
+.form-error {
+	color: #d32f2f;
+	white-space: pre-line;
 }
 
 .secondary-button {
