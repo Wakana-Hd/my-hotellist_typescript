@@ -4,7 +4,6 @@ export type Hotel = {
 	city: string;
 	rating: string;
 	images: string[];
-	image?: string;
 	date: string;
 	type: string;
 	memo: string;

@@ -114,8 +114,7 @@ function App() {
 	useEffect(() => {
 		if (!selectedHotel) return;
 
-		const imageCount =
-			selectedHotel.images?.length ?? (selectedHotel.image ? 1 : 0);
+		const imageCount = selectedHotel.images?.length;
 
 		if (imageCount <= 1) return;
 
@@ -182,10 +181,7 @@ function App() {
 								setCurrentImageIndex(index);
 							}}
 						>
-							{(
-								selectedHotel.images ??
-								(selectedHotel.image ? [selectedHotel.image] : [])
-							).map((image, index) => (
+							{selectedHotel.images.map((image, index) => (
 								<img
 									key={image}
 									className="detail-image"
@@ -196,10 +192,7 @@ function App() {
 						</div>
 
 						<div className="image-dots">
-							{(
-								selectedHotel.images ??
-								(selectedHotel.image ? [selectedHotel.image] : [])
-							).map((image, index) => (
+							{selectedHotel.images.map((image, index) => (
 								<span
 									key={image}
 									className={index === currentImageIndex ? "active" : ""}

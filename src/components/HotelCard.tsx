@@ -21,7 +21,7 @@ function HotelCard(props: HotelCardProps) {
 			>
 				<img
 					className="card-image"
-					src={props.hotel.images?.[0] ?? props.hotel.image}
+					src={props.hotel.images[0]}
 					alt={props.hotel.name}
 				/>
 
