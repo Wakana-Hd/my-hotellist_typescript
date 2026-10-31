@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { useState } from "react";
 import "./Login.css";
 import LoginForm from "./LoginForm";
 import ResetPasswordForm from "./ResetPasswordForm";
@@ -12,20 +11,6 @@ type LoginProps = {
 
 function Login({ isPasswordRecovery, onPasswordUpdated }: LoginProps) {
 	const [isResettingPassword, setIsResettingPassword] = useState(false);
-	const [isUpdatingPassword, setIsUpdatingPassword] =
-		useState(isPasswordRecovery);
-
-	useEffect(() => {
-		const { data } = supabase.auth.onAuthStateChange((event) => {
-			if (event === "PASSWORD_RECOVERY") {
-				setIsUpdatingPassword(true);
-			}
-		});
-
-		return () => {
-			data.subscription.unsubscribe();
-		};
-	}, []);
 
 	return (
 		<div className="login-page">
@@ -39,7 +24,7 @@ function Login({ isPasswordRecovery, onPasswordUpdated }: LoginProps) {
 					</p>
 				</div>
 
-				{isUpdatingPassword ? (
+				{isPasswordRecovery ? (
 					<UpdatePasswordForm onPasswordUpdated={onPasswordUpdated} />
 				) : isResettingPassword ? (
 					<ResetPasswordForm onBack={() => setIsResettingPassword(false)} />

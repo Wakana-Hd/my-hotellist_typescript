@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import HotelCard from "./components/HotelCard";
 import HotelForm from "./components/HotelForm";
 import Login from "./components/Login";
-import { useAuth } from "./lib/auth";
+import { finishPasswordRecovery, useAuth } from "./lib/auth";
 import { supabase } from "./lib/supabase";
 import type { Hotel, HotelFormData } from "./types";
 
@@ -26,20 +26,7 @@ function App() {
 	const [screen, setScreen] = useState("list");
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const imageContainerRef = useRef<HTMLDivElement | null>(null);
-	const { session, loading } = useAuth();
-	const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
-
-	useEffect(() => {
-		const { data } = supabase.auth.onAuthStateChange((event) => {
-			if (event === "PASSWORD_RECOVERY") {
-				setIsPasswordRecovery(true);
-			}
-		});
-
-		return () => {
-			data.subscription.unsubscribe();
-		};
-	}, []);
+	const { session, loading, isPasswordRecovery } = useAuth();
 
 	const saveHotels = (hotels: Hotel[]): boolean => {
 		try {
@@ -335,7 +322,7 @@ function App() {
 			{!session || isPasswordRecovery ? (
 				<Login
 					isPasswordRecovery={isPasswordRecovery}
-					onPasswordUpdated={() => setIsPasswordRecovery(false)}
+					onPasswordUpdated={finishPasswordRecovery}
 				/>
 			) : (
 				<>

@@ -4,13 +4,27 @@ import type { Session } from "@supabase/supabase-js";
 import { useSyncExternalStore } from "react";
 import { supabase } from "./supabase";
 
-type AuthState = { session: Session | null; loading: boolean };
-let state: AuthState = { session: null, loading: true };
+type AuthState = {
+	session: Session | null;
+	loading: boolean;
+	isPasswordRecovery: boolean;
+};
+let state: AuthState = {
+	session: null,
+	loading: true,
+	isPasswordRecovery: false,
+};
 const listeners = new Set<() => void>();
 
-// onAuthStateChange は登録直後に INITIAL_SESSION が来るので getSession() は不要
-supabase.auth.onAuthStateChange((_event, session) => {
-	state = { session, loading: false };
+supabase.auth.onAuthStateChange((event, session) => {
+	state = {
+		...state,
+		session,
+		loading: false,
+		isPasswordRecovery:
+			event === "PASSWORD_RECOVERY" ? true : state.isPasswordRecovery,
+	};
+
 	listeners.forEach((listener) => {
 		listener();
 	});
@@ -24,3 +38,14 @@ export const useAuth = () =>
 		},
 		() => state,
 	);
+
+export const finishPasswordRecovery = () => {
+	state = {
+		...state,
+		isPasswordRecovery: false,
+	};
+
+	listeners.forEach((listener) => {
+		listener();
+	});
+};
