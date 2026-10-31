@@ -20,7 +20,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 		defaultValues: initialHotel ?? {
 			name: "",
 			city: "",
-			rating: "",
+			rating: 0,
 			date: "",
 			type: "",
 			memo: "",
@@ -29,6 +29,7 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 	});
 
 	const images = watch("images");
+	const rating = watch("rating");
 
 	//画像圧縮
 	const resizeImage = (imageData: string): Promise<string> => {
@@ -118,22 +119,44 @@ function HotelForm({ onSubmit, initialHotel, onCancel }: HotelFormProps) {
 				{errors.city && <p className="form-error">{errors.city.message}</p>}
 			</label>
 
-			<label className="field">
-				<span>評価</span>
-				<select
+			<div className="field">
+				<input
+					type="hidden"
 					{...register("rating", {
-						required: "評価を選択してください",
+						validate: (value) => value >= 1 || "評価を選択してください",
 					})}
-				>
-					<option value="">選択してください</option>
-					<option value="★★★★★">★★★★★</option>
-					<option value="★★★★☆">★★★★☆</option>
-					<option value="★★★☆☆">★★★☆☆</option>
-					<option value="★★☆☆☆">★★☆☆☆</option>
-					<option value="★☆☆☆☆">★☆☆☆☆</option>
-				</select>
+				/>
+				<span>評価</span>
+				<div className="star-rating">
+					{[1, 2, 3, 4, 5].map((star) => (
+						<button
+							key={star}
+							type="button"
+							className="star-button"
+							onClick={() => {
+								setValue("rating", star, {
+									shouldValidate: true,
+								});
+							}}
+						>
+							<svg
+								width="32"
+								height="32"
+								viewBox="0 0 24 24"
+								fill={star <= rating ? "#E8AC35" : "none"}
+								stroke={star <= rating ? "#E8AC35" : "#999"}
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								aria-hidden="true"
+							>
+								<polygon points="12 2 15.1 8.3 22 9.3 17 14.2 18.2 21.1 12 17.8 5.8 21.1 7 14.2 2 9.3 8.9 8.3 12 2" />
+							</svg>{" "}
+						</button>
+					))}
+				</div>
 				{errors.rating && <p className="form-error">{errors.rating.message}</p>}
-			</label>
+			</div>
 
 			<label className="field">
 				<span>宿泊日</span>

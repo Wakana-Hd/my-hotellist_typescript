@@ -1,4 +1,6 @@
+import { BedDouble, MapPin } from "lucide-react";
 import type { Hotel } from "../types";
+import StarRating from "./StarRating";
 
 type HotelCardProps = {
 	hotel: Hotel;
@@ -19,16 +21,26 @@ function HotelCard(props: HotelCardProps) {
 					textAlign: "left",
 				}}
 			>
-				<img
-					className="card-image"
-					src={props.hotel.images[0]}
-					alt={props.hotel.name}
-				/>
+				{props.hotel.images?.[0] ? (
+					<img
+						className="card-image"
+						src={props.hotel.images[0]}
+						alt={props.hotel.name}
+					/>
+				) : (
+					<div className="card-image no-image">
+						<BedDouble size={48} />
+						<span>No Image</span>
+					</div>
+				)}
 
 				<div className="card-body">
-					<p className="card-location">{props.hotel.city}</p>
+					<p className="card-location">
+						<MapPin size={14} />
+						{props.hotel.city}
+					</p>
 					<h2>{props.hotel.name}</h2>
-					<p className="rating">{props.hotel.rating}</p>
+					<StarRating rating={props.hotel.rating} />
 					<p className="card-date">{props.hotel.date}</p>
 				</div>
 			</button>

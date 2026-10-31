@@ -2,7 +2,7 @@ export type Hotel = {
 	id: number;
 	name: string;
 	city: string;
-	rating: string;
+	rating: number;
 	images: string[];
 	date: string;
 	type: string;
@@ -12,7 +12,7 @@ export type Hotel = {
 export type HotelFormData = {
 	name: string;
 	city: string;
-	rating: string;
+	rating: number;
 	date: string;
 	type: string;
 	memo: string;

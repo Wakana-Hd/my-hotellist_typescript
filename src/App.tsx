@@ -1,25 +1,17 @@
-import "./App.css";
+import { BedDouble } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import HotelCard from "./components/HotelCard";
 import HotelForm from "./components/HotelForm";
 import Login from "./components/Login";
+import StarRating from "./components/StarRating";
 import { finishPasswordRecovery, useAuth } from "./lib/auth";
 import { supabase } from "./lib/supabase";
 import type { Hotel, HotelFormData } from "./types";
+import "./App.css";
 
 function App() {
-	//開いたとき、localStorageに保存済みホテルがあれば配列に戻してhotelListの初期値にする。
-	//何も保存されていなければ空配列 [] から始める。
-	const [hotelList, setHotelList] = useState<Hotel[]>(() => {
-		const savedHotels = localStorage.getItem("hotelList");
-
-		if (savedHotels) {
-			return JSON.parse(savedHotels);
-		}
-
-		return [];
-	});
+	const [hotelList, setHotelList] = useState<Hotel[]>([]);
 
 	const [editingHotelId, setEditingHotelId] = useState<number | null>(null);
 	const [selectedHotelId, setSelectedHotelId] = useState<number | null>(null);
@@ -28,26 +20,53 @@ function App() {
 	const imageContainerRef = useRef<HTMLDivElement | null>(null);
 	const { session, loading, isPasswordRecovery } = useAuth();
 
-	const saveHotels = (hotels: Hotel[]): boolean => {
-		try {
-			localStorage.setItem("hotelList", JSON.stringify(hotels));
-			setHotelList(hotels);
-			return true;
-		} catch (error) {
-			alert("ホテルの保存に失敗しました");
-			console.error("保存エラー:", error);
-			return false;
+	useEffect(() => {
+		let cancelled = false;
+
+		if (!session) {
+			setHotelList([]);
+			return;
 		}
-	};
+
+		const fetchHotels = async () => {
+			const { data, error } = await supabase
+				.from("hotels")
+				.select("*")
+				.order("id", { ascending: true });
+
+			if (error) {
+				console.error("ホテルデータの取得に失敗しました:", error);
+				return;
+			}
+
+			if (!cancelled) {
+				setHotelList(
+					(data ?? []).map((hotel) => ({
+						...hotel,
+						images: hotel.images ?? [],
+						date: hotel.date ?? "",
+						type: hotel.type ?? "",
+						memo: hotel.memo ?? "",
+					})),
+				);
+			}
+		};
+
+		fetchHotels();
+
+		return () => {
+			cancelled = true;
+		};
+	}, [session]);
 
 	//登録、編集
-	const handleAddHotel = (data: HotelFormData) => {
-		let success = false;
+	const handleAddHotel = async (data: HotelFormData) => {
+		if (!session) {
+			alert("ログインが必要です");
+			return;
+		}
 
-		const newHotel = {
-			...data,
-			id: Date.now(),
-		};
+		let success = false;
 
 		if (editingHotelId !== null) {
 			const updatedHotels = hotelList.map((hotel) => {
@@ -62,9 +81,51 @@ function App() {
 				return hotel;
 			});
 
-			success = saveHotels(updatedHotels);
+			const { error } = await supabase
+				.from("hotels")
+				.update({
+					...data,
+					rating: data.rating,
+					date: data.date || null,
+				})
+				.eq("id", editingHotelId);
+
+			if (error) {
+				console.error("ホテルの編集に失敗しました:", error);
+				alert("ホテルの編集に失敗しました");
+				return;
+			}
+
+			setHotelList(updatedHotels);
+			success = true;
 		} else {
-			success = saveHotels([...hotelList, newHotel]);
+			const { data: newHotels, error } = await supabase
+				.from("hotels")
+				.insert({
+					...data,
+					rating: data.rating,
+					date: data.date || null,
+					user_id: session.user.id,
+				})
+				.select();
+
+			if (error) {
+				console.error("ホテルの登録に失敗しました:", error);
+				alert("ホテルの登録に失敗しました");
+				return;
+			}
+
+			setHotelList([
+				...hotelList,
+				...newHotels.map((hotel) => ({
+					...hotel,
+					images: hotel.images ?? [],
+					date: hotel.date ?? "",
+					type: hotel.type ?? "",
+					memo: hotel.memo ?? "",
+				})),
+			]);
+			success = true;
 		}
 
 		if (success) {
@@ -73,9 +134,18 @@ function App() {
 		}
 	};
 
-	//削除する時
-	const handleDeleteHotel = (id: number) => {
-		const success = saveHotels(hotelList.filter((hotel) => hotel.id !== id));
+	//削除
+	const handleDeleteHotel = async (id: number) => {
+		const { error } = await supabase.from("hotels").delete().eq("id", id);
+
+		if (error) {
+			console.error("ホテルの削除に失敗しました:", error);
+			alert("ホテルの削除に失敗しました");
+			return;
+		}
+
+		setHotelList(hotelList.filter((hotel) => hotel.id !== id));
+		const success = true;
 
 		if (success) {
 			setSelectedHotelId(null);
@@ -83,7 +153,7 @@ function App() {
 		}
 	};
 
-	//編集する時
+	//編集
 	const handleEditHotel = (hotel: Hotel) => {
 		setEditingHotelId(hotel.id);
 
@@ -168,14 +238,21 @@ function App() {
 								setCurrentImageIndex(index);
 							}}
 						>
-							{selectedHotel.images.map((image, index) => (
-								<img
-									key={image}
-									className="detail-image"
-									src={image}
-									alt={`${selectedHotel.name} ${index + 1}`}
-								/>
-							))}
+							{selectedHotel.images.length > 0 ? (
+								selectedHotel.images.map((image, index) => (
+									<img
+										key={image}
+										className="detail-image"
+										src={image}
+										alt={`${selectedHotel.name} ${index + 1}`}
+									/>
+								))
+							) : (
+								<div className="detail-image no-image">
+									<BedDouble size={48} />
+									<span>No Image</span>
+								</div>
+							)}
 						</div>
 
 						<div className="image-dots">
@@ -193,7 +270,9 @@ function App() {
 					<div className="detail-content">
 						<h1>{selectedHotel.name}</h1>
 
-						<p className="detail-rating">{selectedHotel.rating}</p>
+						<div className="detail-rating">
+							<StarRating rating={selectedHotel.rating} />
+						</div>
 						<dl className="detail-info">
 							<div>
 								<dt>地域</dt>
