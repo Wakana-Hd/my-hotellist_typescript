@@ -61,9 +61,15 @@ function ResetPasswordForm({ onBack }: ResetPasswordFormProps) {
 
 				{errors.email && <p className="login-error">{errors.email.message}</p>}
 
-				<button type="submit" disabled={isSubmitting}>
-					再設定メールを送信
-				</button>
+				<div className="reset-actions">
+					<button type="submit" className="button" disabled={isSubmitting}>
+						再設定メールを送信
+					</button>
+
+					<button type="button" className="secondary-button" onClick={onBack}>
+						ログイン画面に戻る
+					</button>
+				</div>
 
 				{message && (
 					<p
@@ -75,10 +81,6 @@ function ResetPasswordForm({ onBack }: ResetPasswordFormProps) {
 					</p>
 				)}
 			</form>
-
-			<button type="button" onClick={onBack}>
-				ログイン画面に戻る
-			</button>
 		</div>
 	);
 }

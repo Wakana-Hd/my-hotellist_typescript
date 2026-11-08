@@ -1,0 +1,74 @@
+.hotel-card {
+	overflow: hidden;
+	background: var(--white);
+	box-shadow: var(--shadow);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.hotel-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 18px 44px rgb(30 41 37 / 12%);
+}
+
+.hotel-card a {
+	display: block;
+}
+
+.card-image {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	background: #dfe7df;
+}
+
+.card-body {
+	padding: 26px 22px 24px;
+}
+
+.card-location {
+	margin: 0 0 18px;
+	color: var(--muted);
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.hotel-card h2 {
+	margin: 0;
+	color: var(--ink);
+	font-size: 18px;
+	line-height: 1.35;
+}
+
+.card-body .rating {
+	margin: 18px 0 20px;
+	font-size: 17px;
+}
+
+.hotel-card time {
+	color: var(--muted);
+	font-size: 11px;
+}
+
+.card-date {
+	color: var(--muted);
+	font-size: 11px;
+}
+
+.hotel-card .star-rating {
+	margin-top: 12px;
+}
+
+.hotel-card .star-rating svg {
+	width: 20px;
+	height: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hotel-card {
+		transition-duration: 0.01ms;
+	}
+}

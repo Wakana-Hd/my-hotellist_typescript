@@ -35,34 +35,6 @@
 	box-shadow: 0 0 0 3px rgb(70 98 82 / 12%);
 }
 
-.login-button,
-.signup-button {
-	width: 100%;
-	min-height: 48px;
-	font-weight: 700;
-	cursor: pointer;
-}
-
-.login-button {
-	border: 1px solid #466252;
-	background-color: #466252;
-	color: white;
-}
-
-.login-button:hover {
-	background-color: #2e4638;
-}
-
-.signup-button {
-	border: 1px solid #466252;
-	background-color: white;
-	color: #466252;
-}
-
-.signup-button:hover {
-	background-color: #eef3ef;
-}
-
 .signup-text {
 	margin: 16px 0;
 	text-align: center;
@@ -124,4 +96,15 @@
 	font-size: 13px;
 	color: #888;
 	margin-top: 4px;
+}
+
+.reset-actions {
+	display: flex;
+	justify-content: center;
+	gap: 32px;
+	margin-top: 20px;
+}
+
+.full-width {
+	width: 100%;
 }

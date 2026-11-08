@@ -118,7 +118,11 @@ function LoginForm({ onForgotPassword }: LoginFormProps) {
 					パスワードを忘れた方はこちら
 				</button>
 
-				<button type="submit" className="login-button" disabled={isSubmitting}>
+				<button
+					type="submit"
+					className="button full-width"
+					disabled={isSubmitting}
+				>
 					ログイン
 				</button>
 
@@ -126,7 +130,7 @@ function LoginForm({ onForgotPassword }: LoginFormProps) {
 
 				<button
 					type="button"
-					className="signup-button"
+					className="secondary-button full-width"
 					onClick={handleSubmit(handleSignUp)}
 					disabled={isSubmitting}
 				>

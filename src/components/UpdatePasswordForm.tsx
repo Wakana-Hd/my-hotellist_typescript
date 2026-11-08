@@ -75,7 +75,7 @@ function UpdatePasswordForm({ onPasswordUpdated }: UpdatePasswordFormProps) {
 				</p>
 			)}
 
-			<button type="submit" disabled={isSubmitting}>
+			<button type="submit" className="button" disabled={isSubmitting}>
 				パスワードを変更
 			</button>
 		</form>

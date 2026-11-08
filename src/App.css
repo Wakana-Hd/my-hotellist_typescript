@@ -83,14 +83,15 @@ button {
 
 .button,
 .secondary-button,
-.delete-button {
+.delete-button,
+.login-button {
 	min-height: 48px;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	border-radius: 0;
 	padding: 12px 24px;
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 700;
 }
 
@@ -152,69 +153,9 @@ h1 {
 	gap: 24px;
 }
 
-.hotel-card {
-	overflow: hidden;
-	background: var(--white);
-	box-shadow: var(--shadow);
-	transition:
-		transform 0.2s ease,
-		box-shadow 0.2s ease;
-}
-
-.hotel-card:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 18px 44px rgb(30 41 37 / 12%);
-}
-
-.hotel-card a {
-	display: block;
-}
-
-.card-image {
-	width: 100%;
-	aspect-ratio: 4 / 3;
-	object-fit: cover;
-	background: #dfe7df;
-}
-
-.card-body {
-	padding: 26px 22px 24px;
-}
-
-.card-location {
-	margin: 0 0 18px;
-	color: var(--muted);
-	font-size: 12px;
-	display: flex;
-	align-items: center;
-	gap: 4px;
-}
-
-.hotel-card h2 {
-	margin: 0;
-	color: var(--ink);
-	font-size: 18px;
-	line-height: 1.35;
-}
-
 .rating {
 	color: var(--accent);
 	letter-spacing: 0.08em;
-}
-
-.card-body .rating {
-	margin: 18px 0 20px;
-	font-size: 17px;
-}
-
-.hotel-card time {
-	color: var(--muted);
-	font-size: 11px;
-}
-
-.card-date {
-	color: var(--muted);
-	font-size: 11px;
 }
 
 .beginner-note {
@@ -455,13 +396,12 @@ h1 {
 
 .secondary-button {
 	border: 1px solid var(--accent);
-	background: transparent;
+	background: var(--white);
 	color: var(--accent);
 }
 
 .secondary-button:hover {
-	background: var(--accent);
-	color: var(--white);
+	background: #eef3ef;
 }
 
 .star-rating {
@@ -481,14 +421,6 @@ h1 {
 
 .star-button:hover {
 	background: transparent;
-}
-.hotel-card .star-rating {
-	margin-top: 12px;
-}
-
-.hotel-card .star-rating svg {
-	width: 20px;
-	height: 20px;
 }
 
 .no-image {
@@ -601,11 +533,5 @@ h1 {
 	input[type="date"] {
 		width: calc(100% - 28px);
 		box-sizing: border-box;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.hotel-card {
-		transition-duration: 0.01ms;
 	}
 }

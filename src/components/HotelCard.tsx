@@ -1,6 +1,7 @@
 import { BedDouble, MapPin } from "lucide-react";
 import type { Hotel } from "../types";
 import StarRating from "./StarRating";
+import "./HotelCard.css";
 
 type HotelCardProps = {
 	hotel: Hotel;
