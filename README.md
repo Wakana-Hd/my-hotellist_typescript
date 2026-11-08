@@ -11,7 +11,7 @@ https://hotel-review-react.vercel.app/
 - React
 - TypeScript
 - Vite
-- Supabase Auth
+- Supabase Auth / Database
 - React Hook Form
 - Biome
 - Vercel
@@ -22,7 +22,7 @@ https://hotel-review-react.vercel.app/
 
 - ホテルの登録・一覧表示・詳細表示・編集・削除
 - ホテル名・地域・評価の登録
-- localStorageへのデータ保存
+- Supabaseへのデータ保存
 - レスポンシブ対応
 
 ### 画像機能
@@ -42,16 +42,13 @@ https://hotel-review-react.vercel.app/
 
 ## 現在のデータ保存方法
 
-ログイン機能にはSupabase Authを使用していますが、
-ホテルの記録は現在、ブラウザのlocalStorageに保存しています。
-そのため、現時点ではユーザーごとのデータ管理や、
-異なる端末間でのデータ共有には対応していません。
+ユーザー認証にはSupabase Authを使用しています。
+ホテルの記録と画像データはSupabase Databaseに保存しています。
+RLSによって、ログインユーザーごとのデータアクセスを制御しています。
 
 ## 今後実装したい機能
 
-- ホテルデータをSupabaseのデータベースに保存
-- ログインユーザーごとのデータ管理
-- 画像の外部ストレージへの保存
+- 画像データをSupabase Storageに移行
 - ホテルの検索・絞り込み機能
 - UI・UX改善
 - ホテル記録の共有機能
@@ -64,10 +61,14 @@ https://hotel-review-react.vercel.app/
 - TypeScriptによる型定義
 - React Hook Formによるフォーム管理
 - Supabase Authを利用した認証機能
+- Supabase Databaseを利用したデータの取得・登録・更新・削除
+- RLSによるユーザーごとのアクセス制御
 - localStorageによるデータ保存
 - FileReader・Canvasを使った画像処理
+- CSSのコンポーネントごとの分割と共通スタイルの管理
 - Git・GitHubを使ったバージョン管理
+- Vercelを使ったアプリのデプロイ・公開URLの設定
 
 ## 技術選定について
 
-- [Supabase Authを採用した理由](docs/adr/20261017-supabase-auth.md)
+[Supabase Authを採用した理由](docs/adr/20261017-supabase-auth.md)
